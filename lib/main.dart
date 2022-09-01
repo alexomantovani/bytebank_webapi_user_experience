@@ -1,9 +1,11 @@
+import 'package:bytebank_persistence/database/app_database.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/dashboard.dart';
 
 void main() {
   runApp(const BytebankApp());
+  findAll().then((contatos) => debugPrint(contatos.toString()));
 }
 
 class BytebankApp extends StatelessWidget {

@@ -55,8 +55,8 @@ class _ContactFormState extends State<ContactForm> {
                         int.tryParse(_controladorNumeroConta.text);
 
                     final Contact novoContato = numeroConta != null
-                        ? Contact(nome, numeroConta)
-                        : Contact('vazio', 1);
+                        ? Contact(0, nome, numeroConta)
+                        : Contact(0, 'vazio', 1);
 
                     Navigator.pop(context, novoContato);
                   },
