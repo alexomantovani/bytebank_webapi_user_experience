@@ -1,12 +1,9 @@
-import 'package:bytebank_persistence/database/app_database.dart';
-import 'package:bytebank_persistence/models/contact.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/dashboard.dart';
 
 void main() {
   runApp(const BytebankApp());
-  save(Contact(0, 'Alexandre', 1000));
 }
 
 class BytebankApp extends StatelessWidget {

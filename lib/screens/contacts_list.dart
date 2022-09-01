@@ -1,23 +1,28 @@
-import 'package:bytebank_persistence/database/app_database.dart';
 import 'package:flutter/material.dart';
 
 import 'contact_form.dart';
 import '/models/contact.dart';
+import '/database/dao/contact_dao.dart';
 
-class ContactsList extends StatelessWidget {
+class ContactsList extends StatefulWidget {
   const ContactsList({Key? key}) : super(key: key);
 
   @override
+  State<ContactsList> createState() => _ContactsListState();
+}
+
+class _ContactsListState extends State<ContactsList> {
+  @override
   Widget build(BuildContext context) {
+    final ContactDao dao = ContactDao();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Contacts'),
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: const [],
-        future: findAll(),
+        future: dao.findAll(),
         builder: (context, snapshot) {
-          print(snapshot.connectionState);
           switch (snapshot.connectionState) {
             case ConnectionState.none:
               break;
@@ -55,7 +60,9 @@ class ContactsList extends StatelessWidget {
                 builder: (context) => const ContactForm(),
               ),
             )
-            .then((novoContato) => debugPrint(novoContato.toString())),
+            .then((novoContato) => setState(
+                  () {},
+                )),
         child: const Icon(
           Icons.add,
         ),
