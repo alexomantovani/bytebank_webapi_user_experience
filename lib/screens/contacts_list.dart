@@ -17,7 +17,7 @@ class _ContactsListState extends State<ContactsList> {
     final ContactDao dao = ContactDao();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contacts'),
+        title: const Text('Transferência'),
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: const [],
@@ -31,10 +31,7 @@ class _ContactsListState extends State<ContactsList> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const <Widget>[
-                    CircularProgressIndicator(),
-                    Text('Carregando')
-                  ],
+                  children: const <Widget>[CircularProgressIndicator(), Text('Carregando')],
                 ),
               );
             case ConnectionState.active:
