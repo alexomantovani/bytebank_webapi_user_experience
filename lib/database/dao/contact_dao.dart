@@ -49,7 +49,7 @@ class ContactDao {
   Map<String, dynamic> _toMap(Contact contato) {
     final Map<String, dynamic> mapaContato = {};
     mapaContato[_nome] = contato.nome;
-    mapaContato[_numeroConta] = contato.numeroContal;
+    mapaContato[_numeroConta] = contato.numeroConta;
     return mapaContato;
   }
 
