@@ -1,6 +1,7 @@
-import 'package:bytebank_persistence/components/progress.dart';
 import 'package:flutter/material.dart';
 
+import '/components/progress.dart';
+import '/screens/transaction_form.dart';
 import 'contact_form.dart';
 import '/models/contact.dart';
 import '/database/dao/contact_dao.dart';
@@ -37,7 +38,14 @@ class _ContactsListState extends State<ContactsList> {
                 itemCount: contatos.length,
                 itemBuilder: (context, index) {
                   final Contact contato = contatos[index];
-                  return _ContatacItem(contato);
+                  return _ContatacItem(
+                    contato,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => TransactionForm(contato: contato),
+                      ),
+                    ),
+                  );
                 },
               );
             default:
@@ -65,9 +73,11 @@ class _ContactsListState extends State<ContactsList> {
 
 class _ContatacItem extends StatelessWidget {
   final Contact contato;
+  final Function() onTap;
 
   const _ContatacItem(
     this.contato, {
+    required this.onTap,
     Key? key,
   }) : super(key: key);
 
@@ -75,6 +85,7 @@ class _ContatacItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => onTap(),
         title: Text(
           contato.nome,
           style: const TextStyle(
