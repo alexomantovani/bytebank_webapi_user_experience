@@ -21,7 +21,7 @@ class _TransactionFormState extends State<TransactionForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nova trasação'),
+        title: const Text('Nova transação'),
       ),
       body: SingleChildScrollView(
         child: Padding(
