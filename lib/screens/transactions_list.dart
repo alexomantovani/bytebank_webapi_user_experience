@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../components/centered_message.dart';
 import '../components/progress.dart';
-import '/http/web_client.dart';
+import '../http/webclients/transaction_webclient.dart';
 import '/models/transaction.dart';
 
 class TransactionsList extends StatelessWidget {
-  const TransactionsList({super.key});
+  TransactionsList({super.key});
+
+  final TransactionWebClient _webClient = TransactionWebClient();
 
   @override
   Widget build(BuildContext context) {
-    final webClient = LoggingInterceptor();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transações'),
       ),
       body: FutureBuilder<List<Transaction>>(
         initialData: const <Transaction>[],
-        future: webClient.findAllWebClient(),
+        future: _webClient.findAllWebClient(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
