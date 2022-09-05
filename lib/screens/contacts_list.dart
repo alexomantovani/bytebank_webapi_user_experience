@@ -1,3 +1,4 @@
+import 'package:bytebank_persistence/components/progress.dart';
 import 'package:flutter/material.dart';
 
 import 'contact_form.dart';
@@ -27,13 +28,7 @@ class _ContactsListState extends State<ContactsList> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const <Widget>[CircularProgressIndicator(), Text('Carregando')],
-                ),
-              );
+              return const Progress();
             case ConnectionState.active:
               break;
             case ConnectionState.done:
@@ -87,7 +82,7 @@ class _ContatacItem extends StatelessWidget {
           ),
         ),
         subtitle: Text(
-          contato.numeroContal.toString(),
+          contato.numeroConta.toString(),
           style: const TextStyle(
             fontSize: 16.0,
           ),
