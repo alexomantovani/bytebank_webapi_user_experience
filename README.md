@@ -1,4 +1,4 @@
-# bytebank_persistence
+# bytebank_webapi_user_experience
 
 A new Flutter project.
 
