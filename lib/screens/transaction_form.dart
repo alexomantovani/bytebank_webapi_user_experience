@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '/components/response_dialog.dart';
 import '/components/transaction_auth_dialog.dart';
 import '/models/contact.dart';
 import '/models/transaction.dart';
-import 'package:bytebank_persistence/http/webclients/transaction_webclient.dart';
+import '/http/webclients/transaction_webclient.dart';
 
 class TransactionForm extends StatefulWidget {
   final Contact contato;
@@ -21,6 +22,7 @@ final TransactionWebClient _webClient = TransactionWebClient();
 
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
+  String transactionId = const Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,9 @@ class _TransactionFormState extends State<TransactionForm> {
                   child: ElevatedButton(
                     onPressed: () {
                       final double value = double.parse(_valueController.text);
-                      final transactionCreated = Transaction(widget.contato, value);
+
+                      final Transaction transactionCreated = Transaction(transactionId, widget.contato, value);
+
                       showDialog(
                         context: context,
                         builder: (contextDialog) {
@@ -113,18 +117,25 @@ class _TransactionFormState extends State<TransactionForm> {
   }
 }
 
-Future<Transaction> _send(Transaction transactionCreated, String password, BuildContext context) async {
+Future<Transaction> _send(
+  Transaction transactionCreated,
+  String password,
+  BuildContext context,
+) async {
   final Transaction transaction = await _webClient.save(transactionCreated, password).catchError((e) {
-    _showFailureMessage(context, message: 'timeout submitting the transaction');
-  }, test: (e) => e is TimeoutException).catchError((e) {
     _showFailureMessage(context, message: e.message);
   }, test: (e) => e is HttpException).catchError((e) {
+    _showFailureMessage(context, message: 'timeout submitting the transaction');
+  }, test: (e) => e is TimeoutException).catchError((e) {
     _showFailureMessage(context);
   });
   return transaction;
 }
 
-void _showFailureMessage(BuildContext context, {String message = 'Unknown error'}) {
+void _showFailureMessage(
+  BuildContext context, {
+  String message = 'Unknown error',
+}) {
   showDialog(
     context: context,
     builder: (contextDialog) {
