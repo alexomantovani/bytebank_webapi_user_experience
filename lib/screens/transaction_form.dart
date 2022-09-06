@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bytebank_persistence/components/progress.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,11 +19,11 @@ class TransactionForm extends StatefulWidget {
   State<TransactionForm> createState() => _TransactionFormState();
 }
 
-final TransactionWebClient _webClient = TransactionWebClient();
-
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
+  final TransactionWebClient _webClient = TransactionWebClient();
   String transactionId = const Uuid().v4();
+  bool _sending = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,15 @@ class _TransactionFormState extends State<TransactionForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Visibility(
+                visible: _sending,
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Progress(
+                    message: 'Sending...',
+                  ),
+                ),
+              ),
               Text(
                 widget.contato.nome,
                 style: const TextStyle(
@@ -115,31 +125,32 @@ class _TransactionFormState extends State<TransactionForm> {
       Navigator.pop(context);
     }
   }
-}
 
-Future<Transaction> _send(
-  Transaction transactionCreated,
-  String password,
-  BuildContext context,
-) async {
-  final Transaction transaction = await _webClient.save(transactionCreated, password).catchError((e) {
-    _showFailureMessage(context, message: e.message);
-  }, test: (e) => e is HttpException).catchError((e) {
-    _showFailureMessage(context, message: 'timeout submitting the transaction');
-  }, test: (e) => e is TimeoutException).catchError((e) {
-    _showFailureMessage(context);
-  });
-  return transaction;
-}
+  Future<Transaction> _send(
+    Transaction transactionCreated,
+    String password,
+    BuildContext context,
+  ) async {
+    setState(() => _sending = true);
+    final Transaction transaction = await _webClient.save(transactionCreated, password).catchError((e) {
+      _showFailureMessage(context, message: e.message);
+    }, test: (e) => e is HttpException).catchError((e) {
+      _showFailureMessage(context, message: 'timeout submitting the transaction');
+    }, test: (e) => e is TimeoutException).catchError((e) {
+      _showFailureMessage(context);
+    }).whenComplete(() => setState(() => _sending = false));
+    return transaction;
+  }
 
-void _showFailureMessage(
-  BuildContext context, {
-  String message = 'Unknown error',
-}) {
-  showDialog(
-    context: context,
-    builder: (contextDialog) {
-      return FailureDialog(message);
-    },
-  );
+  void _showFailureMessage(
+    BuildContext context, {
+    String message = 'Unknown error',
+  }) {
+    showDialog(
+      context: context,
+      builder: (contextDialog) {
+        return FailureDialog(message);
+      },
+    );
+  }
 }
